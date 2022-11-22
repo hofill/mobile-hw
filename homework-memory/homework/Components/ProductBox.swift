@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProductBox: View {
     @EnvironmentObject var storage: AppMemory
+    @State var confirm = false;
     
     let product: Product
     
@@ -36,9 +37,7 @@ struct ProductBox: View {
             }
             HStack {
                 Button (action: {
-                    storage.products.removeAll {
-                        $0.id == product.id
-                    }
+                    confirm = true;
                 }) {
                     Image(systemName: "trash").font(.system(size: 30))
                 }
@@ -46,6 +45,12 @@ struct ProductBox: View {
                     Image(systemName: "pencil").font(.system(size: 30))
                 }
 
+            }
+        }.confirmationDialog("Confirm Deletion", isPresented: $confirm) {
+            Button("Confirm Deletion", role:.destructive) {
+                storage.products.removeAll {
+                    $0.id == product.id
+                }
             }
         }
     }
